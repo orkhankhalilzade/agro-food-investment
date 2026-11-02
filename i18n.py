@@ -128,7 +128,8 @@ TEXT: dict[str, dict[str, str]] = {
     "r_diesel_cost": {"en": "Cost of Diesel", "az": "Dizelin dəyəri"},
     "r_lub_cost": {"en": "Cost of Lubricants", "az": "Sürtkü yağının dəyəri"},
     "missing": {"en": "Missing input", "az": "Məlumat çatışmır"},
-    "missing_list": {"en": "Missing: {list}", "az": "Çatışmır: {list}"},
+    "missing_list": {"en": "Missing input: {list}", "az": "Çatışmayan məlumatlar: {list}"},
+    "save_load": {"en": "Save / Load", "az": "Saxla / Yüklə"},
     # block 5
     "all": {"en": "All", "az": "Hamısı"},
     "export": {"en": "Export to Excel", "az": "Excel-ə ixrac et"},
