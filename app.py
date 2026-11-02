@@ -25,32 +25,96 @@ NONE_ORCHARD = "__none__"
 
 STYLE = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-html, body, [class*="css"], .stApp { font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; }
-.block-container { padding-top: 1.6rem; max-width: 1400px; }
-div[data-testid="stVerticalBlockBorderWrapper"] { background: #ffffff; border-radius: 8px; }
-.blk { display:flex; gap:.75rem; align-items:center; margin:.6rem 0 .4rem 0; }
-.blk .num { width:1.9rem; height:1.9rem; border-radius:50%; background:#144927; color:#f5faf4;
-            display:flex; align-items:center; justify-content:center; font-weight:600; font-size:.95rem; flex:none; }
-.blk .t { font-size:1.2rem; font-weight:600; color:#121e14; line-height:1.2; }
-.blk .s { font-size:.85rem; color:#5c675d; }
-.sub { font-weight:600; color:#12361e; margin:.1rem 0 .4rem 0; }
-.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:.75rem; margin:.3rem 0 .6rem 0; }
-.card { border:1px solid #dee3de; border-radius:8px; background:#fff; padding:.7rem .9rem; }
-.card.primary { background:#144927; border-color:#144927; }
-.card .l { font-size:.78rem; color:#5c675d; }
-.card .v { font-family:'IBM Plex Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums;
-           font-size:1.35rem; font-weight:500; color:#121e14; }
-.card .v small { font-size:.8rem; color:#5c675d; }
-.card.primary .l, .card.primary .v, .card.primary .v small { color:#f5faf4; }
-.card .v.miss, .miss { color:#6e4108; font-size:.9rem; font-family:'IBM Plex Sans',sans-serif; }
-.card.primary .v.miss { color:#fee5b3; }
-table.res { width:100%; border-collapse:collapse; }
-table.res td { padding:.28rem 0; border-bottom:1px solid #ebf2eb; font-size:.9rem; vertical-align:baseline; }
-table.res td.k { color:#5c675d; padding-right:.6rem; }
-table.res td.v { text-align:right; font-family:'IBM Plex Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
-.note { font-size:.8rem; color:#5c675d; }
-.warnbox { background:#fee5b3; color:#6e4108; border-radius:6px; padding:.35rem .6rem; font-size:.82rem; margin-top:.4rem; }
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root { --primary:#144927; --primary-fg:#f5faf4; --border:#dee3de; --input:#d4d9d3; --surface:#f5f7f5;
+        --muted:#5c675d; --fg:#121e14; --accent:#daefda; --warn:#fee5b3; --warn-fg:#6e4108; }
+html, body, .stApp, [class*="css"] { font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; color:var(--fg); }
+header[data-testid="stHeader"], [data-testid="stToolbar"], [data-testid="stDecoration"] { display:none !important; }
+.block-container { max-width:1400px; padding:0 1.5rem 3rem 1.5rem; }
+[data-testid="stVerticalBlock"] { gap:1rem; }
+
+/* top bar */
+div[class*="st-key-topbar"] { background:#fff; border-bottom:1px solid var(--border); padding:.55rem 1.5rem; }
+.brand { display:flex; align-items:center; gap:.65rem; }
+.brand .logo { width:36px; height:36px; border-radius:8px; background:var(--primary); display:flex; align-items:center; justify-content:center; flex:none; }
+.brand .bt { font-size:1.25rem; font-weight:700; letter-spacing:-.01em; line-height:1.15; color:var(--fg); }
+.brand .bs { font-size:.75rem; color:var(--muted); }
+.brand .company-name { font-size:.8rem; font-weight:600; color:var(--primary); background:var(--accent); border-radius:999px; padding:.25rem .65rem; }
+
+/* cards (blocks 1-5): the keyed container itself is the bordered element in this Streamlit version */
+div[class*="st-key-card_"] { background:#fff; border:1px solid var(--border) !important; border-radius:12px !important;
+    box-shadow:0 1px 2px rgba(18,30,20,.06); padding:0 !important; gap:0 !important; overflow:hidden; }
+div[data-testid="stMarkdownContainer"]:has(> .card-h) { margin-bottom:0 !important; }
+.card-h { display:flex; gap:.75rem; align-items:flex-start; padding:1rem 1.5rem; border-bottom:1px solid var(--border); }
+.card-h .badge { width:28px; height:28px; border-radius:6px; background:var(--primary); color:var(--primary-fg); font-family:'IBM Plex Mono',monospace;
+                 font-size:.75rem; font-weight:600; display:flex; align-items:center; justify-content:center; flex:none; }
+.card-h .ct { font-size:1rem; font-weight:600; line-height:1.3; }
+.card-h .cs { font-size:.875rem; color:var(--muted); }
+div[class*="st-key-body_"] { padding:1.5rem !important; }
+
+/* sub-cards inside block 3 */
+div[class*="st-key-sub_"] { background:var(--surface); border:1px solid var(--border) !important; border-radius:8px !important; padding:1rem !important; gap:.9rem !important; }
+.sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--primary); margin:0 0 .15rem 0; }
+.note { font-size:.78rem; color:var(--muted); }
+.footbar { border-top:1px solid var(--border); margin:1.25rem 0 .9rem 0; }
+
+/* inputs: white, thin border, 36px (like the Lovable inputs) */
+[data-testid="stWidgetLabel"] p { font-size:.75rem !important; font-weight:500 !important; color:var(--muted) !important; }
+[data-testid="stWidgetLabel"] { margin-bottom:.1rem; }
+[data-testid="stTextInputRootElement"], [data-testid="stNumberInputContainer"], [data-testid="stTextAreaRootElement"],
+[data-testid="stSelectbox"] div[class*="react-aria-ComboBox"] > div {
+    background-color:#fff !important; border:1px solid var(--input) !important; border-radius:6px !important; box-shadow:0 1px 1px rgba(18,30,20,.04); }
+[data-testid="stTextInputRootElement"], [data-testid="stNumberInputContainer"], [data-testid="stSelectbox"] div[class*="react-aria-ComboBox"] > div { height:36px !important; min-height:36px !important; }
+[data-testid="stTextInputRootElement"] input, [data-testid="stNumberInputField"], [data-testid="stSelectbox"] input { font-size:.875rem; height:34px !important; }
+[data-testid="stNumberInputField"] { font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+[data-testid="stNumberInputStepDown"], [data-testid="stNumberInputStepUp"] { display:none !important; }
+[data-testid="stTextAreaRootElement"] textarea { font-size:.875rem; }
+[data-testid="stTextInputRootElement"]:focus-within, [data-testid="stNumberInputContainer"]:focus-within, [data-testid="stTextAreaRootElement"]:focus-within,
+[data-testid="stSelectbox"] div[class*="react-aria-ComboBox"] > div:focus-within { border-color:#377249 !important; box-shadow:0 0 0 2px rgba(55,114,73,.22) !important; }
+[data-testid="stTextInputRootElement"]:has(input:disabled), [data-testid="stNumberInputContainer"]:has(input:disabled) { background-color:var(--surface) !important; }
+/* blocks 1 and 2 share one row and have the same height */
+div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-card_b1"]) { align-items:stretch !important; }
+div[data-testid="stColumn"]:has(div[class*="st-key-card_b1"]), div[data-testid="stColumn"]:has(div[class*="st-key-card_b2"]) { display:flex; flex-direction:column; }
+div[data-testid="stColumn"]:has(div[class*="st-key-card_b1"]) > div, div[data-testid="stColumn"]:has(div[class*="st-key-card_b2"]) > div,
+div[data-testid="stColumn"]:has(div[class*="st-key-card_b1"]) > div > div, div[data-testid="stColumn"]:has(div[class*="st-key-card_b2"]) > div > div { flex:1; height:100%; }
+div[class*="st-key-card_b1"], div[class*="st-key-card_b2"] { height:100%; }
+/* rows of block 3: sub-cards of one row have the same height */
+div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-sub_op"]), div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-sub_ipm"]) { align-items:stretch !important; }
+div[data-testid="stColumn"]:has(div[class*="st-key-sub_op"]), div[data-testid="stColumn"]:has(div[class*="st-key-sub_mach"]), div[data-testid="stColumn"]:has(div[class*="st-key-sub_ipm"]) { display:flex; flex-direction:column; }
+div[data-testid="stColumn"]:has(div[class*="st-key-sub_op"]) > div, div[data-testid="stColumn"]:has(div[class*="st-key-sub_mach"]) > div, div[data-testid="stColumn"]:has(div[class*="st-key-sub_ipm"]) > div,
+div[data-testid="stColumn"]:has(div[class*="st-key-sub_op"]) > div > div, div[data-testid="stColumn"]:has(div[class*="st-key-sub_mach"]) > div > div, div[data-testid="stColumn"]:has(div[class*="st-key-sub_ipm"]) > div > div { flex:1; height:100%; }
+div[class*="st-key-sub_op"], div[class*="st-key-sub_mach"], div[class*="st-key-sub_ipm"] { height:100%; }
+div[data-testid="stLayoutWrapper"]:has(> div[class*="st-key-topbar"]) { margin:0 0 1.25rem -1.5rem !important; width:calc(100% + 3rem) !important; max-width:none !important; flex:none !important;
+    position:sticky; top:0; z-index:1000; box-shadow:0 1px 3px rgba(18,30,20,.08); }
+.tbl { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.tbl .th { display:grid; grid-template-columns:repeat(11,1fr); gap:.5rem; background:var(--surface); padding:.65rem .75rem; font-size:.72rem; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); font-weight:500; }
+.tbl .empty { padding:2.25rem 1rem; text-align:center; color:var(--muted); font-size:.875rem; border-top:1px solid var(--border); }
+.stButton > button, .stDownloadButton > button, [data-testid="stPopover"] > button, div[data-testid="stFormSubmitButton"] > button {
+    height:36px; min-height:36px; border-radius:6px; font-size:.875rem; font-weight:500; padding:0 .9rem; border:1px solid var(--input); background:#fff; box-shadow:0 1px 1px rgba(18,30,20,.05); }
+.stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"], div[data-testid="stFormSubmitButton"] > button[kind="primary"] { background:var(--primary); color:var(--primary-fg); border-color:var(--primary); }
+.stButton > button[kind="primary"]:hover, .stDownloadButton > button[kind="primary"]:hover { background:#1d5f35; border-color:#1d5f35; color:var(--primary-fg); }
+
+/* result cards + lists */
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.75rem; margin:0 0 1.25rem 0; }
+.cards.five { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); margin:.25rem 0 1rem 0; }
+.card { border:1px solid var(--border); border-radius:8px; background:#fff; padding:.75rem; }
+.card.primary { background:var(--primary); border-color:var(--primary); }
+.card .l { font-size:.75rem; color:var(--muted); }
+.card .v { display:flex; align-items:baseline; gap:.25rem; margin-top:.25rem; font-family:'IBM Plex Mono',ui-monospace,monospace;
+           font-variant-numeric:tabular-nums; font-size:1.125rem; font-weight:600; }
+.card .v small { font-family:'IBM Plex Sans',sans-serif; font-size:.75rem; font-weight:400; color:var(--muted); }
+.card .v.dash { color:#9aa59b; }
+.card.primary .l, .card.primary .v, .card.primary .v small { color:rgba(245,250,244,.92); }
+.card.primary .v.dash { color:rgba(245,250,244,.6); }
+.groups { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.25rem; }
+.groups h3 { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--primary); margin:0 0 .5rem 0; padding:0; }
+.groups dl { margin:0; border:1px solid var(--border); border-radius:8px; background:var(--surface); }
+.groups .row { display:flex; justify-content:space-between; align-items:center; gap:.75rem; padding:.5rem .75rem; font-size:.875rem; border-bottom:1px solid var(--border); }
+.groups .row:last-child { border-bottom:0; }
+.groups dt { color:var(--muted); margin:0; } .groups dd { margin:0; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums; font-weight:500; white-space:nowrap; }
+.groups dd.dash { color:#9aa59b; } .groups dd small { font-family:'IBM Plex Sans',sans-serif; color:var(--muted); font-weight:400; }
+.warnbox { background:var(--warn); color:var(--warn-fg); border-radius:6px; padding:.45rem .7rem; font-size:.8rem; margin:-.5rem 0 1rem 0; }
+[data-testid="stTabs"] button[role="tab"] { font-size:.9rem; }
 </style>
 """
 
@@ -322,9 +386,14 @@ def handle_load(uploaded):
 
 
 # --------------------------------------------------------------------------- rendering helpers
-def block_head(n: int, title: str, sub: str):
-    st.markdown(f'<div class="blk"><span class="num">{n}</span><div><div class="t">{esc(title)}</div>'
-                f'<div class="s">{esc(sub)}</div></div></div>', unsafe_allow_html=True)
+LOGO_SVG = ('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5faf4" stroke-width="2" '
+            'stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>'
+            '<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>')
+
+
+def card_header(n: int, title: str, sub: str):
+    st.markdown(f'<div class="card-h"><span class="badge">{n}</span><div><div class="ct">{esc(title)}</div>'
+                f'<div class="cs">{esc(sub)}</div></div></div>', unsafe_allow_html=True)
 
 
 def sub_head(text: str):
@@ -355,23 +424,31 @@ def fmt(v: float, dec: int = 2) -> str:
     return f"{v:,.{dec}f}"
 
 
-def value_html(v, u: str, dec: int = 2) -> str:
-    if v is None:
-        return f'<span class="miss">{esc(T("missing"))}</span>'
-    return f'{fmt(v, dec)} <small>{esc(unit(u))}</small>'
+def small_unit(u: str) -> str:
+    return f" <small>{esc(unit(u))}</small>" if unit(u) else ""
 
 
-def card(label: str, v, u: str, primary: bool = False, dec: int = 2) -> str:
+def card_html(label: str, v, u: str, primary: bool = False, dec: int = 2) -> str:
     cls = "card primary" if primary else "card"
-    vcls = "v miss" if v is None else "v"
-    inner = esc(T("missing")) if v is None else value_html(v, u, dec)
-    return f'<div class="{cls}"><div class="l">{esc(label)}</div><div class="{vcls}">{inner}</div></div>'
+    if v is None:
+        body = '<div class="v dash">—</div>'
+    else:
+        body = f'<div class="v">{fmt(v, dec)}{small_unit(u)}</div>'
+    return f'<div class="{cls}"><div class="l">{esc(label)}</div>{body}</div>'
 
 
-def missing_caption(keys: list[str], inp: OperationInputs, res: dict) -> str:
+def group_html(title: str, rows: list[tuple[str, object, str, int]]) -> str:
+    out = []
+    for label, v, u, dec in rows:
+        dd = '<dd class="dash">—</dd>' if v is None else f'<dd>{fmt(v, dec)}{small_unit(u)}</dd>'
+        out.append(f'<div class="row"><dt>{esc(label)}</dt>{dd}</div>')
+    return f'<div><h3>{esc(title)}</h3><dl>{"".join(out)}</dl></div>'
+
+
+def missing_banner(inp: OperationInputs, res: dict) -> str:
     need: list[str] = []
-    for k in keys:
-        if res.get(k) is None:
+    for k, v in res.items():
+        if v is None:
             for m in missing_inputs(k, inp, res):
                 lab = input_label(lang(), m)
                 if lab not in need:
@@ -381,89 +458,82 @@ def missing_caption(keys: list[str], inp: OperationInputs, res: dict) -> str:
     return f'<div class="warnbox">{esc(T("missing_list", list=", ".join(need)))}</div>'
 
 
-def result_group(title_key: str, rows: list[tuple[str, str, str, int]], inp: OperationInputs, res: dict):
-    with st.container(border=True):
-        sub_head(T(title_key))
-        body = "".join(f'<tr><td class="k">{esc(T(lab))}</td><td class="v">{value_html(res[k], u, d)}</td></tr>'
-                       for lab, k, u, d in rows)
-        st.markdown(f'<table class="res">{body}</table>', unsafe_allow_html=True)
-        cap = missing_caption([k for _, k, _, _ in rows], inp, res)
-        if cap:
-            st.markdown(cap, unsafe_allow_html=True)
-
-
 # --------------------------------------------------------------------------- page
 def render_header():
-    left, mid, right = st.columns([5, 4, 2], vertical_alignment="center")
-    # The uploaded file must be processed BEFORE anything that reads the data (save button,
-    # widgets below), so it is handled first; the layout slots above only fix where things appear.
-    up_box = st.container()
-    with up_box:
-        up = st.file_uploader(T("load_lbl"), type=["json"], key="uploader")
-    if up is not None:
-        handle_load(up)
-    else:
-        ss.loaded_sig = None
-    with left:
-        st.markdown(f'<div class="t" style="font-size:1.6rem;font-weight:600;color:#144927">{esc(T("app_title"))}</div>'
-                    f'<div class="s" style="color:#5c675d">{esc(T("app_subtitle"))}</div>', unsafe_allow_html=True)
-    with mid:
-        st.download_button(T("save_btn"), data=core.dump_state(ss.operations, norms_snapshot(), inventory_snapshot()),
-                           file_name="agro_food_investment_progress.json", mime="application/json",
-                           help=T("save_note"), key="save_btn")
-    with right:
-        st.segmented_control(T("language"), LANGS, key="lang", on_change=cb_lang, label_visibility="collapsed")
+    with st.container(key="topbar"):
+        left, lang_col, save_col = st.columns([7, 1.5, 1.5], vertical_alignment="center")
+        # The uploaded file must be processed BEFORE anything that reads the data (save button,
+        # widgets below), so it is handled first inside the popover.
+        with save_col:
+            with st.popover(T("save_load")):
+                st.markdown(f'<div class="note">{esc(T("save_note"))}</div>', unsafe_allow_html=True)
+                up = st.file_uploader(T("load_lbl"), type=["json"], key="uploader")
+                if up is not None:
+                    handle_load(up)
+                else:
+                    ss.loaded_sig = None
+                st.download_button(T("save_btn"), data=core.dump_state(ss.operations, norms_snapshot(), inventory_snapshot()),
+                                   file_name="agro_food_investment_progress.json", mime="application/json", key="save_btn")
+        with left:
+            company = f'<span class="company-name">{esc(ss.f_company)}</span>' if ss.f_company else ""
+            st.markdown(f'<div class="brand"><span class="logo">{LOGO_SVG}</span><div><div class="bt">{esc(T("app_title"))}</div>'
+                        f'<div class="bs">{esc(T("app_subtitle"))}</div></div>{company}</div>', unsafe_allow_html=True)
+        with lang_col:
+            st.segmented_control(T("language"), LANGS, key="lang", on_change=cb_lang, label_visibility="collapsed")
 
 
 def render_block1():
-    block_head(1, T("b1"), T("b1_sub"))
-    with st.container(border=True):
-        c = st.columns(6)
-        with c[0]:
-            st.selectbox(T("company"), [""] + core.COMPANIES, key="f_company", on_change=cb_company,
-                         format_func=lambda v: T("select") if v == "" else v)
-        company = ss.f_company
-        orch_opts = [""] + [(o or NONE_ORCHARD) for o in core.ORCHARDS.get(company, [])]
-        if ss.f_orchard not in orch_opts:
-            ss.f_orchard = ""
-        if len(orch_opts) == 2 and ss.f_orchard == "":
-            ss.f_orchard = orch_opts[1]
-        with c[1]:
-            st.selectbox(T("orchard"), orch_opts, key="f_orchard",
-                         format_func=lambda v: T("select") if v == "" else orch_label(v))
-        with c[2]:
-            area_txt = ""
-            if company and ss.f_orchard:
-                area_txt = f"{CFG.area(company, orch_value(ss.f_orchard)):g}"
-            st.text_input(T("area"), value=area_txt, disabled=True, help=T("area_help"))
-        with c[3]:
-            st.selectbox(T("stage"), [""] + core.STAGES, key="f_stage",
-                         format_func=lambda v: T("select") if v == "" else stage_label(lang(), v))
-        with c[4]:
-            st.selectbox(T("month"), [""] + core.MONTHS, key="f_month", on_change=cb_month,
-                         format_func=lambda v: T("select") if v == "" else month_label(lang(), v))
-        week_opts = [""] + (CFG.weeks_of(company, ss.f_month) if company and ss.f_month else [])
-        if ss.f_week not in week_opts:
-            ss.f_week = ""
-        with c[5]:
-            st.selectbox(T("week"), week_opts, key="f_week",
-                         format_func=lambda v: T("select") if v == "" else f"{T('week')} {v}")
+    with st.container(border=True, key="card_b1"):
+        card_header(1, T("b1"), T("b1_sub"))
+        with st.container(key="body_b1"):
+            r1 = st.columns(3)
+            r2 = st.columns(3)
+            with r1[0]:
+                st.selectbox(T("company"), [""] + core.COMPANIES, key="f_company", on_change=cb_company,
+                             format_func=lambda v: T("select") if v == "" else v)
+            company = ss.f_company
+            orch_opts = [""] + [(o or NONE_ORCHARD) for o in core.ORCHARDS.get(company, [])]
+            if ss.f_orchard not in orch_opts:
+                ss.f_orchard = ""
+            if len(orch_opts) == 2 and ss.f_orchard == "":
+                ss.f_orchard = orch_opts[1]
+            with r1[1]:
+                st.selectbox(T("orchard"), orch_opts, key="f_orchard",
+                             format_func=lambda v: T("select") if v == "" else orch_label(v))
+            with r1[2]:
+                area_txt = ""
+                if company and ss.f_orchard:
+                    area_txt = f"{CFG.area(company, orch_value(ss.f_orchard)):g}"
+                st.text_input(T("area"), value=area_txt, disabled=True, help=T("area_help"))
+            with r2[0]:
+                st.selectbox(T("stage"), [""] + core.STAGES, key="f_stage",
+                             format_func=lambda v: T("select") if v == "" else stage_label(lang(), v))
+            with r2[1]:
+                st.selectbox(T("month"), [""] + core.MONTHS, key="f_month", on_change=cb_month,
+                             format_func=lambda v: T("select") if v == "" else month_label(lang(), v))
+            week_opts = [""] + (CFG.weeks_of(company, ss.f_month) if company and ss.f_month else [])
+            if ss.f_week not in week_opts:
+                ss.f_week = ""
+            with r2[2]:
+                st.selectbox(T("week"), week_opts, key="f_week",
+                             format_func=lambda v: T("select") if v == "" else f"{T('week')} {v}")
 
 
 def render_block2():
-    block_head(2, T("b2"), T("b2_sub"))
-    with st.container(border=True):
-        c = st.columns(5)
-        with c[0]:
-            st.number_input(T("n_shift"), min_value=0.0, step=0.5, format="%g", key=norm_key("work_shift_h"))
-        with c[1]:
-            st.selectbox(T("n_tank"), [1, 0], key=norm_key("round_up_tanks"), help=T("n_tank_help"))
-        with c[2]:
-            st.number_input(T("n_engine"), min_value=0.0, step=0.05, format="%g", key=norm_key("engine_factor"))
-        with c[3]:
-            st.number_input(T("n_diesel"), min_value=0.0, step=0.05, format="%g", key=norm_key("diesel_cost"))
-        with c[4]:
-            st.number_input(T("n_lub"), min_value=0.0, step=0.5, format="%g", key=norm_key("lubricant_cost"))
+    with st.container(border=True, key="card_b2"):
+        card_header(2, T("b2"), T("b2_sub"))
+        with st.container(key="body_b2"):
+            r1, r2, r3 = st.columns(2), st.columns(2), st.columns(2)
+            with r1[0]:
+                st.number_input(T("n_shift"), min_value=0.0, step=0.5, format="%g", key=norm_key("work_shift_h"))
+            with r1[1]:
+                st.selectbox(T("n_tank"), [1, 0], key=norm_key("round_up_tanks"), help=T("n_tank_help"))
+            with r2[0]:
+                st.number_input(T("n_engine"), min_value=0.0, step=0.05, format="%g", key=norm_key("engine_factor"))
+            with r2[1]:
+                st.number_input(T("n_diesel"), min_value=0.0, step=0.05, format="%g", key=norm_key("diesel_cost"))
+            with r3[0]:
+                st.number_input(T("n_lub"), min_value=0.0, step=0.5, format="%g", key=norm_key("lubricant_cost"))
 
 
 def render_products():
@@ -471,89 +541,121 @@ def render_products():
     ready = bool(company and orchard and week != "")
     okey = orchard if orchard else "x"
     if not ready:
-        st.markdown(f'<div class="note">{esc(T("program_pick"))}</div>', unsafe_allow_html=True)
+        msg = T("program_pick")
     else:
-        has = CFG.has_program(company, orch_value(orchard), week)
-        st.markdown(f'<div class="note">{esc(T("program_loaded") if has else T("program_none"))}</div>',
-                    unsafe_allow_html=True)
-    for cat in core.CATEGORIES:
-        pkey, skey = f"p_{cat}_{okey}_{week}", f"s_{cat}_{okey}_{week}"
-        if ready and pkey not in ss:
-            ss[pkey] = "\n".join(CFG.program(company, orch_value(orchard), week).get(cat, []))
-        elif not ready:
-            ss.setdefault(pkey, "")
-        st.text_area(T(cat), key=pkey, height=96, disabled=not ready)
-        if ready:
-            sugg = CFG.suggestions(company, orch_value(orchard), cat)
-            if sugg:
-                ss.setdefault(skey, "")
-                st.selectbox(T("suggest"), [""] + sugg, key=skey, label_visibility="collapsed",
-                             format_func=lambda v: T("suggest") + " …" if v == "" else " | ".join(v.split("\n"))[:90],
-                             on_change=cb_suggest, args=(pkey, skey))
+        msg = T("program_loaded") if CFG.has_program(company, orch_value(orchard), week) else T("program_none")
+    st.markdown(f'<div class="note">{esc(msg)}</div>', unsafe_allow_html=True)
+    cats = core.CATEGORIES
+    for i in range(0, len(cats), 2):
+        cols = st.columns(2)
+        for col, cat in zip(cols, cats[i:i + 2]):
+            pkey, skey = f"p_{cat}_{okey}_{week}", f"s_{cat}_{okey}_{week}"
+            if ready and pkey not in ss:
+                ss[pkey] = "\n".join(CFG.program(company, orch_value(orchard), week).get(cat, []))
+            elif not ready:
+                ss.setdefault(pkey, "")
+            with col:
+                st.text_area(T(cat), key=pkey, height=88, disabled=not ready)
+                if ready:
+                    sugg = CFG.suggestions(company, orch_value(orchard), cat)
+                    if sugg:
+                        ss.setdefault(skey, "")
+                        st.selectbox(T("suggest"), [""] + sugg, key=skey, label_visibility="collapsed",
+                                     format_func=lambda v: T("suggest") + " …" if v == "" else " | ".join(v.split("\n"))[:60],
+                                     on_change=cb_suggest, args=(pkey, skey))
 
 
 def render_block3():
-    block_head(3, T("b3"), T("b3_sub"))
     company, orchard = ss.f_company, orch_value(ss.f_orchard)
     editing = next((o for o in ss.operations if o["id"] == ss.edit_id), None)
-    if editing:
-        st.info(T("editing", pt=editing["pt"]))
-    r1 = st.columns(3)
-    with r1[0], st.container(border=True):
-        sub_head(T("op_info"))
-        if editing:
-            pt = editing["pt"]
-        elif company and ss.f_orchard:
-            pt = core.next_pt(ss.operations, company, orchard)
-        else:
-            pt = "—"
-        st.text_input(T("operation"), value=T("operation_auto", pt=pt) if pt != "—" else "—", disabled=True)
-        num_input(T("solution"), "solution_per_ha", step=10.0)
-        num_input(T("row_len"), "row_length", step=1.0)
-        num_input(T("rows"), "rows", integer=True)
-        num_input(T("max_dur"), "max_duration", step=1.0)
-        st.markdown(f'<div class="note">{esc(T("info_note"))}</div>', unsafe_allow_html=True)
-    with r1[1], st.container(border=True):
-        sub_head(T("mach"))
-        st.text_input(T("tractor"), key="i_tractor", placeholder=T("tractor_ph"))
-        num_input(T("n_tractors"), "tractors", integer=True)
-        num_input(T("speed"), "speed", step=0.5)
-        num_input(T("fuel_w"), "fuel_with_sprayer", step=0.5)
-        num_input(T("oil_w"), "oil_with_sprayer", step=0.01)
-        num_input(T("fuel_wo"), "fuel_without_sprayer", step=0.5)
-        num_input(T("oil_wo"), "oil_without_sprayer", step=0.01)
-        num_input(T("maint"), "maintenance_time_h", step=0.25)
-    with r1[2], st.container(border=True):
-        sub_head(T("ipm"))
-        render_products()
-    r2 = st.columns(3)
-    with r2[0], st.container(border=True):
-        sub_head(T("sprayer"))
-        num_input(T("tank_cap"), "tank_capacity_l", step=50.0)
-        num_input(T("reload"), "reload_minutes", step=1.0)
-        num_input(T("prod"), "productivity_ha_h", step=0.1, help=T("prod_help"))
-    with r2[1], st.container(border=True):
-        sub_head(T("labor"))
-        num_input(T("salary"), "salary_per_hour", step=0.1)
-    with r2[2]:
-        b1, b2 = st.columns(2)
-        b1.button(T("reset"), on_click=cb_reset, width="stretch")
-        b2.button(T("update") if editing else T("add"), on_click=cb_save, type="primary", width="stretch")
-        if editing:
-            st.button(T("cancel_edit"), on_click=cb_reset, width="stretch")
-        if ss.flash:
-            kind, msg = ss.flash
-            getattr(st, kind)(msg)
-            ss.flash = None
-        if company:
-            n_co = sum(1 for o in ss.operations if o["company"] == company)
-            if n_co:
-                st.markdown(f'<div class="note">{esc(T("count_info", n=n_co, company=company))}</div>',
-                            unsafe_allow_html=True)
+    with st.container(border=True, key="card_b3"):
+        card_header(3, T("b3"), T("b3_sub"))
+        with st.container(key="body_b3"):
+            if editing:
+                st.info(T("editing", pt=editing["pt"]))
+            r1 = st.columns(2, gap="medium")
+            with r1[0], st.container(border=True, key="sub_op"):
+                sub_head(T("op_info"))
+                if editing:
+                    pt = editing["pt"]
+                elif company and ss.f_orchard:
+                    pt = core.next_pt(ss.operations, company, orchard)
+                else:
+                    pt = "—"
+                g = st.columns(2)
+                with g[0]:
+                    st.text_input(T("operation"), value=T("operation_auto", pt=pt) if pt != "—" else "—", disabled=True)
+                with g[1]:
+                    num_input(T("solution"), "solution_per_ha", step=10.0)
+                g = st.columns(2)
+                with g[0]:
+                    num_input(T("row_len"), "row_length", step=1.0)
+                with g[1]:
+                    num_input(T("rows"), "rows", integer=True)
+                g = st.columns(2)
+                with g[0]:
+                    num_input(T("max_dur"), "max_duration", step=1.0)
+                st.markdown(f'<div class="note">{esc(T("info_note"))}</div>', unsafe_allow_html=True)
+            with r1[1], st.container(border=True, key="sub_mach"):
+                sub_head(T("mach"))
+                g = st.columns(2)
+                with g[0]:
+                    st.text_input(T("tractor"), key="i_tractor", placeholder=T("tractor_ph"))
+                with g[1]:
+                    num_input(T("n_tractors"), "tractors", integer=True)
+                g = st.columns(2)
+                with g[0]:
+                    num_input(T("speed"), "speed", step=0.5)
+                with g[1]:
+                    num_input(T("fuel_w"), "fuel_with_sprayer", step=0.5)
+                g = st.columns(2)
+                with g[0]:
+                    num_input(T("oil_w"), "oil_with_sprayer", step=0.01)
+                with g[1]:
+                    num_input(T("fuel_wo"), "fuel_without_sprayer", step=0.5)
+                g = st.columns(2)
+                with g[0]:
+                    num_input(T("oil_wo"), "oil_without_sprayer", step=0.01)
+                with g[1]:
+                    num_input(T("maint"), "maintenance_time_h", step=0.25)
+            r2 = st.columns(2, gap="medium")
+            with r2[0], st.container(border=True, key="sub_ipm"):
+                sub_head(T("ipm"))
+                render_products()
+            with r2[1]:
+                with st.container(border=True, key="sub_sprayer"):
+                    sub_head(T("sprayer"))
+                    g = st.columns(2)
+                    with g[0]:
+                        num_input(T("tank_cap"), "tank_capacity_l", step=50.0)
+                    with g[1]:
+                        num_input(T("reload"), "reload_minutes", step=1.0)
+                    g = st.columns(2)
+                    with g[0]:
+                        num_input(T("prod"), "productivity_ha_h", step=0.1, help=T("prod_help"))
+                with st.container(border=True, key="sub_labor"):
+                    sub_head(T("labor"))
+                    num_input(T("salary"), "salary_per_hour", step=0.1)
+            st.markdown('<div class="footbar"></div>', unsafe_allow_html=True)
+            fb = st.columns([8, 1.3, 2])
+            if ss.flash:
+                kind, msg = ss.flash
+                with fb[0]:
+                    getattr(st, kind)(msg)
+                ss.flash = None
+            elif company:
+                n_co = sum(1 for o in ss.operations if o["company"] == company)
+                if n_co:
+                    with fb[0]:
+                        st.markdown(f'<div class="note" style="padding-top:.55rem">{esc(T("count_info", n=n_co, company=company))}</div>',
+                                    unsafe_allow_html=True)
+            fb[1].button(T("reset"), on_click=cb_reset, width="stretch")
+            fb[2].button(T("update") if editing else T("add"), on_click=cb_save, type="primary", width="stretch")
+            if editing:
+                st.button(T("cancel_edit"), on_click=cb_reset)
 
 
 def render_block4():
-    block_head(4, T("b4"), T("b4_sub"))
     company, orchard = ss.f_company, orch_value(ss.f_orchard)
     area = CFG.area(company, orchard) if company and ss.f_orchard else None
     g = lambda n: ss.get(f"i_{n}")
@@ -565,29 +667,27 @@ def render_block4():
         productivity_ha_h=g("productivity_ha_h"), tractors=g("tractors"), salary_per_hour=g("salary_per_hour"))
     res = calculate(inp, Norms(**current_norms()))
     cards = "".join([
-        card(T("r_total_cost"), res["total_cost"], "AZN", primary=True),
-        card(T("r_salary"), res["salary_gross"], "AZN"),
-        card(T("r_fuel_total"), res["total_fuel_lubricants"], "AZN"),
-        card(T("r_working_days"), res["working_days"], "d"),
+        card_html(T("r_total_cost"), res["total_cost"], "AZN", primary=True),
+        card_html(T("r_salary"), res["salary_gross"], "AZN"),
+        card_html(T("r_fuel_total"), res["total_fuel_lubricants"], "AZN"),
+        card_html(T("r_working_days"), res["working_days"], "d"),
     ])
-    st.markdown(f'<div class="cards">{cards}</div>', unsafe_allow_html=True)
-    cap = missing_caption(["total_cost", "working_days"], inp, res)
-    if cap:
-        st.markdown(cap, unsafe_allow_html=True)
-    c = st.columns(3)
-    with c[0]:
-        result_group("g_solution", [("r_total_solution", "total_solution_l", "L", 2), ("r_tanks", "tanks", "pcs", 2),
-                                    ("r_reload_total", "reload_total_h", "h", 2),
-                                    ("r_reload_per_ha", "reload_per_ha", "h/ha", 3)], inp, res)
-    with c[1]:
-        result_group("g_prod", [("r_pure", "pure_productivity", "ha/h", 2), ("r_output", "output_per_shift_ha", "ha", 2),
-                                ("r_time", "time_h", "h", 2), ("r_engine", "engine_hours", "h", 2),
-                                ("r_working_days", "working_days", "d", 2)], inp, res)
-    with c[2]:
-        result_group("g_fuel", [("r_diesel_active", "diesel_active_l", "L", 2), ("r_lub_active", "lubricant_active_l", "L", 2),
-                                ("r_diesel_transit", "diesel_transit_l", "L", 2), ("r_lub_transit", "lubricant_transit_l", "L", 2),
-                                ("r_diesel_cost", "diesel_cost", "AZN", 2), ("r_lub_cost", "lubricant_cost", "AZN", 2),
-                                ("r_fuel_total", "total_fuel_lubricants", "AZN", 2)], inp, res)
+    groups = "".join([
+        group_html(T("g_solution"), [(T("r_total_solution"), res["total_solution_l"], "L", 2), (T("r_tanks"), res["tanks"], "pcs", 2),
+                                     (T("r_reload_total"), res["reload_total_h"], "h", 2), (T("r_reload_per_ha"), res["reload_per_ha"], "h/ha", 3)]),
+        group_html(T("g_prod"), [(T("r_pure"), res["pure_productivity"], "ha/h", 2), (T("r_output"), res["output_per_shift_ha"], "ha", 2),
+                                 (T("r_time"), res["time_h"], "h", 2), (T("r_engine"), res["engine_hours"], "h", 2),
+                                 (T("r_working_days"), res["working_days"], "d", 2)]),
+        group_html(T("g_fuel"), [(T("r_diesel_active"), res["diesel_active_l"], "L", 2), (T("r_lub_active"), res["lubricant_active_l"], "L", 2),
+                                 (T("r_diesel_transit"), res["diesel_transit_l"], "L", 2), (T("r_lub_transit"), res["lubricant_transit_l"], "L", 2),
+                                 (T("r_diesel_cost"), res["diesel_cost"], "AZN", 2), (T("r_lub_cost"), res["lubricant_cost"], "AZN", 2),
+                                 (T("r_fuel_total"), res["total_fuel_lubricants"], "AZN", 2)]),
+    ])
+    with st.container(border=True, key="card_b4"):
+        card_header(4, T("b4"), T("b4_sub"))
+        with st.container(key="body_b4"):
+            st.markdown(f'<div class="cards">{cards}</div>' + missing_banner(inp, res) + f'<div class="groups">{groups}</div>',
+                        unsafe_allow_html=True)
 
 
 def filtered_operations() -> list[dict]:
@@ -610,106 +710,110 @@ def filtered_operations() -> list[dict]:
 
 
 def render_block5():
-    block_head(5, T("b5"), T("b5_sub"))
     ops_all = ss.operations
-    with st.container(border=True):
-        c = st.columns([2, 2, 2, 2, 2, 2], vertical_alignment="bottom")
-        company_opts = [ALL] + core.COMPANIES
-        if ss.wf_company not in company_opts:
-            ss.wf_company = ALL
-        with c[0]:
-            st.selectbox(T("company"), company_opts, key="wf_company",
-                         format_func=lambda v: T("all") if v == ALL else v)
-        orch_all = [(o or NONE_ORCHARD) for co in core.COMPANIES if ss.wf_company in (ALL, co) for o in core.ORCHARDS[co]]
-        orch_opts = [ALL] + list(dict.fromkeys(orch_all))
-        if ss.wf_orchard not in orch_opts:
-            ss.wf_orchard = ALL
-        with c[1]:
-            st.selectbox(T("orchard"), orch_opts, key="wf_orchard",
-                         format_func=lambda v: T("all") if v == ALL else orch_label(v))
-        if ss.wf_month not in [ALL] + core.MONTHS:
-            ss.wf_month = ALL
-        with c[2]:
-            st.selectbox(T("month"), [ALL] + core.MONTHS, key="wf_month",
-                         format_func=lambda v: T("all") if v == ALL else month_label(lang(), v))
-        week_opts = [ALL] + sorted({o["week"] for o in ops_all})
-        if ss.wf_week not in week_opts:
-            ss.wf_week = ALL
-        with c[3]:
-            st.selectbox(T("week"), week_opts, key="wf_week",
-                         format_func=lambda v: T("all") if v == ALL else f"{T('week')} {v}")
-        pt_opts = [ALL] + sorted({o["pt"] for o in ops_all}, key=core.pt_number)
-        if ss.wf_op not in pt_opts:
-            ss.wf_op = ALL
-        with c[4]:
-            st.selectbox(T("operation"), pt_opts, key="wf_op", format_func=lambda v: T("all") if v == ALL else v)
-        with c[5]:
-            companies_with_ops = sorted({o["company"] for o in ops_all}, key=core.COMPANIES.index)
-            if ss.wf_company != ALL:
-                exp_company = ss.wf_company
-            elif len(companies_with_ops) == 1:
-                exp_company = companies_with_ops[0]
-            elif ss.f_company in companies_with_ops:
-                exp_company = ss.f_company
-            else:
-                exp_company = ""
-            n_exp = sum(1 for o in ops_all if o["company"] == exp_company)
+    with st.container(border=True, key="card_b5"):
+        card_header(5, T("b5"), T("b5_sub"))
+        with st.container(key="body_b5"):
+            c = st.columns([2, 2, 2, 2, 2, 2], vertical_alignment="bottom")
+            company_opts = [ALL] + core.COMPANIES
+            if ss.wf_company not in company_opts:
+                ss.wf_company = ALL
+            with c[0]:
+                st.selectbox(T("company"), company_opts, key="wf_company",
+                             format_func=lambda v: T("all") if v == ALL else v)
+            orch_all = [(o or NONE_ORCHARD) for co in core.COMPANIES if ss.wf_company in (ALL, co) for o in core.ORCHARDS[co]]
+            orch_opts = [ALL] + list(dict.fromkeys(orch_all))
+            if ss.wf_orchard not in orch_opts:
+                ss.wf_orchard = ALL
+            with c[1]:
+                st.selectbox(T("orchard"), orch_opts, key="wf_orchard",
+                             format_func=lambda v: T("all") if v == ALL else orch_label(v))
+            if ss.wf_month not in [ALL] + core.MONTHS:
+                ss.wf_month = ALL
+            with c[2]:
+                st.selectbox(T("month"), [ALL] + core.MONTHS, key="wf_month",
+                             format_func=lambda v: T("all") if v == ALL else month_label(lang(), v))
+            week_opts = [ALL] + sorted({o["week"] for o in ops_all})
+            if ss.wf_week not in week_opts:
+                ss.wf_week = ALL
+            with c[3]:
+                st.selectbox(T("week"), week_opts, key="wf_week",
+                             format_func=lambda v: T("all") if v == ALL else f"{T('week')} {v}")
+            pt_opts = [ALL] + sorted({o["pt"] for o in ops_all}, key=core.pt_number)
+            if ss.wf_op not in pt_opts:
+                ss.wf_op = ALL
+            with c[4]:
+                st.selectbox(T("operation"), pt_opts, key="wf_op", format_func=lambda v: T("all") if v == ALL else v)
+            with c[5]:
+                companies_with_ops = sorted({o["company"] for o in ops_all}, key=core.COMPANIES.index)
+                if ss.wf_company != ALL:
+                    exp_company = ss.wf_company
+                elif len(companies_with_ops) == 1:
+                    exp_company = companies_with_ops[0]
+                elif ss.f_company in companies_with_ops:
+                    exp_company = ss.f_company
+                else:
+                    exp_company = ""
+                n_exp = sum(1 for o in ops_all if o["company"] == exp_company)
+                if exp_company and n_exp:
+                    data = export_xlsx.build_workbook(CFG, exp_company, ops_all, norms_snapshot(), inventory_snapshot())
+                    st.download_button(T("export"), data=data, file_name=export_xlsx.file_name(exp_company),
+                                       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                       key="export_btn", type="primary", width="stretch")
+                else:
+                    st.button(T("export"), disabled=True, width="stretch", key="export_dis",
+                              help=T("export_empty") if not companies_with_ops else T("export_none"))
             if exp_company and n_exp:
-                data = export_xlsx.build_workbook(CFG, exp_company, ops_all, norms_snapshot(), inventory_snapshot())
-                st.download_button(T("export"), data=data, file_name=export_xlsx.file_name(exp_company),
-                                   mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                                   key="export_btn", type="primary", width="stretch")
+                st.markdown(f'<div class="note">{esc(T("export_info", n=n_exp, company=exp_company))}</div>',
+                            unsafe_allow_html=True)
+            elif companies_with_ops:
+                st.markdown(f'<div class="note">{esc(T("export_none"))}</div>', unsafe_allow_html=True)
+
+            ops = filtered_operations()
+            s = core.summarize(CFG, ops)
+            cards = "".join([
+                card_html(T("st_area"), s["area"], "ha", dec=1), card_html(T("st_ops"), float(s["count"]), "", dec=0),
+                card_html(T("st_hours"), s["hours"], "h", dec=1), card_html(T("st_diesel"), s["diesel"], "L", dec=1),
+                card_html(T("st_cost"), s["cost"], "AZN", primary=True),
+            ])
+            st.markdown(f'<div class="cards five">{cards}</div>', unsafe_allow_html=True)
+            if s["incomplete"]:
+                st.markdown(f'<div class="note">{esc(T("st_incomplete", n=s["incomplete"]))}</div>', unsafe_allow_html=True)
+
+            if not ops:
+                heads = "".join(f"<div>{esc(T(k))}</div>" for k in ("col_company", "col_orchard", "col_week", "col_operation", "col_area",
+                                                                    "col_tractor", "col_days", "col_diesel", "col_cost", "col_status"))
+                st.markdown(f'<div class="tbl"><div class="th">{heads}<div></div></div><div class="empty">{esc(T("empty_table"))}</div></div>',
+                            unsafe_allow_html=True)
+                return
+            rows = []
+            for o in ops:
+                res = core.compute(CFG, o)
+                rows.append({
+                    T("col_company"): o["company"], T("col_orchard"): orch_label(o["orchard"]), T("col_week"): o["week"],
+                    T("col_operation"): o["pt"], T("col_area"): CFG.area(o["company"], o["orchard"]),
+                    T("col_tractor"): o["inputs"].get("tractor") or "—", T("col_days"): res["working_days"],
+                    T("col_diesel"): core.diesel_total(res), T("col_cost"): res["total_cost"],
+                    T("col_status"): T("status_" + core.status_of(res))})
+            df = pd.DataFrame(rows)
+            numcfg = {c: st.column_config.NumberColumn(format="%.2f") for c in
+                      (T("col_area"), T("col_days"), T("col_diesel"), T("col_cost"))}
+            ev = st.dataframe(df, hide_index=True, width="stretch", on_select="rerun", selection_mode="single-row",
+                              column_config=numcfg, key="wk_table")
+            sel = ev.selection.rows if ev is not None else []
+            if sel and sel[0] < len(ops):
+                op = ops[sel[0]]
+                b = st.columns([1, 1, 6])
+                b[0].button(T("edit"), on_click=cb_edit, args=(op["id"],), key="btn_edit", width="stretch")
+                b[1].button(T("delete"), on_click=cb_delete_ask, args=(op["id"],), key="btn_del", width="stretch")
             else:
-                st.button(T("export"), disabled=True, width="stretch", key="export_dis",
-                          help=T("export_empty") if not companies_with_ops else T("export_none"))
-        if exp_company and n_exp:
-            st.markdown(f'<div class="note">{esc(T("export_info", n=n_exp, company=exp_company))}</div>',
-                        unsafe_allow_html=True)
-        elif companies_with_ops:
-            st.markdown(f'<div class="note">{esc(T("export_none"))}</div>', unsafe_allow_html=True)
-
-    ops = filtered_operations()
-    s = core.summarize(CFG, ops)
-    cards = "".join([
-        card(T("st_area"), s["area"], "ha"), card(T("st_ops"), float(s["count"]), "", dec=0),
-        card(T("st_hours"), s["hours"], "h", dec=1), card(T("st_diesel"), s["diesel"], "L", dec=1),
-        card(T("st_cost"), s["cost"], "AZN"),
-    ]).replace("<small></small>", "")
-    st.markdown(f'<div class="cards">{cards}</div>', unsafe_allow_html=True)
-    if s["incomplete"]:
-        st.markdown(f'<div class="note">{esc(T("st_incomplete", n=s["incomplete"]))}</div>', unsafe_allow_html=True)
-
-    if not ops:
-        st.info(T("empty_table"))
-        return
-    rows = []
-    for o in ops:
-        res = core.compute(CFG, o)
-        rows.append({
-            T("col_company"): o["company"], T("col_orchard"): orch_label(o["orchard"]), T("col_week"): o["week"],
-            T("col_operation"): o["pt"], T("col_area"): CFG.area(o["company"], o["orchard"]),
-            T("col_tractor"): o["inputs"].get("tractor") or "—", T("col_days"): res["working_days"],
-            T("col_diesel"): core.diesel_total(res), T("col_cost"): res["total_cost"],
-            T("col_status"): T("status_" + core.status_of(res))})
-    df = pd.DataFrame(rows)
-    numcfg = {c: st.column_config.NumberColumn(format="%.2f") for c in
-              (T("col_area"), T("col_days"), T("col_diesel"), T("col_cost"))}
-    ev = st.dataframe(df, hide_index=True, width="stretch", on_select="rerun", selection_mode="single-row",
-                      column_config=numcfg, key="wk_table")
-    sel = ev.selection.rows if ev is not None else []
-    if sel and sel[0] < len(ops):
-        op = ops[sel[0]]
-        b = st.columns([1, 1, 6])
-        b[0].button(T("edit"), on_click=cb_edit, args=(op["id"],), key="btn_edit", width="stretch")
-        b[1].button(T("delete"), on_click=cb_delete_ask, args=(op["id"],), key="btn_del", width="stretch")
-    else:
-        st.markdown(f'<div class="note">{esc(T("select_row"))}</div>', unsafe_allow_html=True)
-    cd = next((o for o in ss.operations if o["id"] == ss.confirm_delete), None)
-    if cd:
-        st.warning(T("confirm_delete", pt=cd["pt"], orchard=orch_label(cd["orchard"]), week=cd["week"]))
-        k = st.columns([1, 1, 6])
-        k[0].button(T("confirm"), on_click=cb_delete_do, key="btn_del_yes", type="primary", width="stretch")
-        k[1].button(T("cancel"), on_click=cb_delete_cancel, key="btn_del_no", width="stretch")
+                st.markdown(f'<div class="note">{esc(T("select_row"))}</div>', unsafe_allow_html=True)
+            cd = next((o for o in ss.operations if o["id"] == ss.confirm_delete), None)
+            if cd:
+                st.warning(T("confirm_delete", pt=cd["pt"], orchard=orch_label(cd["orchard"]), week=cd["week"]))
+                k = st.columns([1, 1, 6])
+                k[0].button(T("confirm"), on_click=cb_delete_do, key="btn_del_yes", type="primary", width="stretch")
+                k[1].button(T("cancel"), on_click=cb_delete_cancel, key="btn_del_no", width="stretch")
 
 
 def render_inventory():
@@ -787,8 +891,11 @@ def main():
     # static bilingual labels: the selected tab must not jump when the language changes
     tab_plan, tab_inv = st.tabs(["Planning · Planlaşdırma", "Machinery & Equipment · Texnika və avadanlıq"])
     with tab_plan:
-        render_block1()
-        render_block2()
+        top = st.columns([1.4, 1], gap="medium")
+        with top[0]:
+            render_block1()
+        with top[1]:
+            render_block2()
         render_block3()
         render_block4()
         render_block5()
